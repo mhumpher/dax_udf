@@ -1,6 +1,8 @@
+//Avoids error with FACT - "An argument of function 'FACT' has the wrong data type or the result is too large or too small."
 FUNCTION STAT.FACTORIAL = (n:INT64 VAL) => IF(n = 0, 1, PRODUCTX(GENERATESERIES(1,n),[Value]))
 
-FUNCTION BINOM.DIST = (n:INT64 VAL, x:INT64 VAL, p:DOUBLE VAL) => DIVIDE(PRODUCTX(GENERATESERIES(x+1, n), [Value]),STAT.FACTORIAL(n - x)) * POWER(p,x) * POWER(1-p,n-x)
+// CHOICE(n, x) = n! / (n-x)! (x!) = n * (n-1) * ... * (n - x + 1) / (n-x)!
+FUNCTION BINOM.DIST = (n:INT64 VAL, x:INT64 VAL, p:DOUBLE VAL) => DIVIDE(STAT.FACTORIAL(n),STAT.FACTORIAL(n - x)*STAT.FACTORIAL(x)) * POWER(p,x) * POWER(1-p,n-x)
 
 FUNCTION BINOM.DIST.CUMULATIVE =  (n:INT64 VAL, x:INT64 VAL, p:DOUBLE VAL) =>
 		SUMX(
